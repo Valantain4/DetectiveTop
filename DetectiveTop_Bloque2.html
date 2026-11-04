@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Detective Top — Entrega Bloque 2</title>
+<style>
+  :root{
+    --ink:#1E293B; --slate:#475569; --muted:#64748B;
+    --teal:#0F766E; --line:#E2E8F0; --bg:#F8FAFC; --card:#fff;
+    --soft:#F1F5F9; --pale:#F0FDFA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 20px 64px;}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);}
+  h1{font-family:Georgia,serif;font-size:32px;font-weight:normal;margin:4px 0 8px;}
+  h2{font-size:20px;margin:28px 0 8px;color:var(--teal);}
+  h3{font-size:16px;margin:18px 0 6px;}
+  p{margin:0 0 10px;color:var(--slate);font-size:15px;}
+  .meta{display:grid;grid-template-columns:160px 1fr;gap:6px 12px;font-size:14px;margin:14px 0 18px;}
+  .meta b{color:var(--ink);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;}
+  th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}
+  th{background:var(--teal);color:#fff;font-weight:600;font-size:12px;}
+  td:first-child{font-weight:600;color:var(--ink);}
+  .pts{text-align:right;font-variant-numeric:tabular-nums;width:72px;}
+  .note{font-size:13px;color:var(--muted);}
+  .adr{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0 22px;background:#fff;}
+  .adr .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--teal);background:var(--pale);border-radius:99px;padding:2px 8px;margin-right:6px;}
+  .pend{border:1px dashed #D6B25E;background:#FFFCF5;border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--slate);margin-top:10px;}
+  ul{margin:6px 0 0;padding-left:18px;color:var(--slate);font-size:14px;}
+  li{margin:4px 0;}
+  @media print{
+    body{background:#fff;}
+    .wrap{max-width:none;padding:0;}
+    .card,.adr{break-inside:avoid;}
+    h2{break-after:avoid;}
+  }
+
+  .callout{background:#F0FDFA;border-left:4px solid #0F766E;padding:12px 16px;margin:12px 0;border-radius:6px;font-size:14px;color:#334155;}
+  .warning{background:#FFFBEB;border-left-color:#B45309;}
+  .qa{margin:9px 0;padding:11px 14px;border:1px solid #E2E8F0;border-radius:8px;background:white;}
+  .qa summary{font-weight:600;cursor:pointer;color:#0F766E;}
+  .qa p{margin:9px 0 0;}
+  .printnote{font-size:12px;color:#64748B;}
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="kicker">Arquitectura de software · Bloque 2</div>
+        <h1>Detective Top</h1>
+        <p>De escenario a ADR. Estado de los ADR: Propuesto. La Decision queda abierta hasta el Bloque 3.</p>
+        <div class="meta">
+            <b>Equipo</b><span>________________________________</span>
+            <b>Integrantes</b><span>________________________________</span>
+        </div>
+        <h2>1. Ficha de contexto</h2>
+        <div class="card">
+            <p>Detective Top es una aplicación web para investigar casos ficticios de misterio. Cada persona crea un perfil con contraseña. El jugador explora escenas, visita lugares, interroga personajes con preguntas predefinidas y, al final, acusa a un sospechoso. El sistema decide si la acusación es correcta y guarda el progreso y el resultado. La clasificación es una sola, global. Los tres primeros puestos, con la regla de desempate de esta ficha, reciben pistas para casos posteriores.</p>
+            <p>La primera versión tiene como máximo 5 casos completos. Solo funciona con conexión. No hay aplicación nativa, chat, mensajería, pagos, compras ni publicidad. Perfiles, casos, decisiones, puntuaciones y progreso viven en una base de datos central.</p>
+        </div>
+        <table>
+            <thead><tr><th>Ancla</th><th>Cifra o restricción</th></tr></thead>
+            <tbody>
+                <tr><td>Usuarios</td><td>40 perfiles registrados.</td></tr>
+                <tr><td>Pico</td><td>25 jugadores a la vez, durante una sesión de 90 minutos.</td></tr>
+                <tr><td>Disponibilidad</td><td>En esa sesión, las decisiones ya confirmadas se recuperan al recargar. Una escritura no confirmada no cuenta como decisión. Cero uso sin conexión.</td></tr>
+                <tr><td>Presupuesto</td><td>0 servicios externos de pago. Una sola base central. Sin mensajería ni publicidad.</td></tr>
+                <tr><td>Regulación</td><td>No hay norma sectorial ni pagos. El dato del perfil es el acceso con contraseña. La restricción que ancla la seguridad es la pista del top 3, no una ley externa.</td></tr>
+                <tr><td>Desempate</td><td>Mayor puntuación; en empate, cierre más temprano registrado por el servidor; si persiste, identificador de perfil menor. La clasificación es dinámica y global. Para cada caso futuro se puede entregar, como máximo, una pista por perfil elegible; la elegibilidad se comprueba al solicitarla y la entrega ya realizada no se revoca.</td></tr>
+                <tr><td>Límite de tiempo</td><td>Objetivo por comprobar, no resultado probado: con 25 jugadores simultáneos, responder a una pregunta confirmada y aceptar o rechazar un cierre en menos de 1 s.</td></tr>
+            </tbody>
+        </table><div class="callout"><b>Reglas funcionales necesarias para medir la calidad.</b> Cada decisión de investigación se identifica por perfil, caso y acción, y debe persistir en el servidor. La acusación se acepta solo cuando la sesión es válida y se cumplen las condiciones explícitas del caso (pistas o acciones obligatorias); la puntuación se calcula en el servidor a partir de estas reglas y del progreso confirmado, nunca de una cifra enviada por el navegador. Cada perfil puede cerrar y puntuar un caso una sola vez: repetir la solicitud no duplica puntos. La clasificación puede cambiar con nuevos cierres. Una pista se puede conceder a un perfil si está entre los tres primeros al momento de solicitarla; para el mismo perfil y caso futuro no se entrega dos veces. Una pista ya vista no se puede retirar.</div>
+        <p class="note">Estas cifras son el ancla para puntuar atributos. Si el curso tiene otro tamaño, se reemplazan 40 y 25 y se mantienen las tensiones.</p>
+        </th><th>Medida</th><th>ADR</th><
+        <h2>2. Priorización</h2>
+        <table>
+            <thead><tr><th>Atributo</th><th class="pts">Puntos</th><th>Por qué</th></tr></thead>
+            <tbody>
+                <tr><td>Adecuación funcional</td><td class="pts">4</td><td>Prioridad de la etapa: el juego debe hacer lo que promete (explorar, interrogar, acusar, puntuar, clasificar, entregar pistas). Si una función principal falla, no hay producto que evaluar. No está en 5 porque las funciones están acotadas a 5 casos y a un flujo cerrado.</td></tr>
+                <tr><td>Usabilidad</td><td class="pts">4</td><td>El jugador debe entender qué hacer sin fricción: elegir pregunta, interpretar respuesta, saber si la acusación fue aceptada, ver su puesto y qué le falta. En etapa temprana la experiencia del jugador es el criterio de adopción. No está en 5 porque el juego es de nicho y tolera cierta curva.</td></tr>
+                <tr><td>Seguridad</td><td class="pts">4</td><td>La pista del top 3 y la integridad de la puntuación son la única fuente de riesgo real del producto. Se sube a 4 para cumplir la regla de tres atributos en 4 o más y porque las tensiones con AF y Usabilidad son medibles. No está en 5 porque el volumen es bajo (40 perfiles, casos ficticios, sin pagos) y no debe desplazar la experiencia del jugador como eje.</td></tr>
+                <tr><td>Eficiencia de desempeño</td><td class="pts">2</td><td>Con 25 concurrentes y 90 min, el sistema debe responder en tiempos razonables, pero no es la tensión de diseño de esta etapa. Se mide como restricción operativa (p95 &lt; 2 s), no se optimiza.</td></tr>
+                <tr><td>Fiabilidad</td><td class="pts">1</td><td>En etapa temprana se tolera reintentar y ver mensajes de error. La persistencia y la recuperación al recargar se validan como restricción operativa, no como eje. Baja a 1 para liberar el punto que sube Seguridad a 4.</td></tr>
+                <tr><td>Mantenibilidad</td><td class="pts">1</td><td>La primera versión trae 5 casos ya cerrados. Agregar casos no es la tensión de esta entrega.</td></tr>
+                <tr><td>Portabilidad</td><td class="pts">1</td><td>Restricción del proyecto: solo web, sin aplicación nativa.</td></tr>
+                <tr><td>Compatibilidad</td><td class="pts">1</td><td>Un cliente web y una base central. Sin chat, pagos ni sistemas externos.</td></tr>
+            </tbody>
+        </table>
+        <p class="note">Suma: 4+4+4+2+1+1+1+1 = 18.</p>
+        <div class="callout"><b>Nota de cumplimiento.</b> Tres atributos en 4 o más (AF, Usabilidad, Seguridad); ninguno con triple 5; suma 18; mínimo 1 por atributo. La distribución entera 4,4,4,2,1,1,1,1 es la única posible con tres atributos en 4 y suma 18. AF y Usabilidad siguen siendo los atributos que definen la experiencia del jugador; Seguridad protege, no define.</div>
+
+        <h2>3. Pares en tensión</h2>
+        <p>Hay tres atributos en 4 (AF, Usabilidad, Seguridad). Cada par enfrenta dos atributos altos entre sí. Los pares con Desempeño (2) y Fiabilidad (1) se declaran como <b>restricciones operativas</b>, no como tensiones de diseño.</p>
+        <table>
+            <thead><tr><th>Si se prioriza</th><th>Paga</th><th>Quién pierde</th></tr></thead>
+            <tbody>
+                <tr><td>Adecuación funcional (4)</td><td>Usabilidad (4)</td><td>Cubrir todas las funciones del caso (pistas obligatorias, condiciones de acusación, reglas de puntuación) exige más pasos y mensajes. La función completa cuesta fluidez.</td></tr>
+                <tr><td>Usabilidad (4)</td><td>Adecuación funcional (4)</td><td>Simplificar el flujo para que el jugador avance rápido puede ocultar reglas del caso o reducir la verificación visible. La comodidad cuesta cobertura funcional explícita.</td></tr>
+                <tr><td>Adecuación funcional (4)</td><td>Seguridad (4)</td><td>Explicar al jugador por qué su acusación fue rechazada mejora la función y la experiencia, pero revela parte de la estructura del caso y de la lógica de puntuación.</td></tr>
+                <tr><td>Usabilidad (4)</td><td>Seguridad (4)</td><td>Mensajes claros e inmediatos sobre el estado y los errores mejoran la experiencia, pero pueden filtrar información sobre reglas internas o el estado de otros perfiles si no se filtran por perfil y caso.</td></tr>
+            </tbody>
+        </table>
+        <p class="note"><b>Restricciones operativas (no tensiones de diseño):</b> Seguridad (4) vs Desempeño (2) — verificar en servidor dentro de p95 &lt; 2 s; AF (4) vs Fiabilidad (1) — mostrar progreso completo sin mostrar lo no confirmado, validado en pruebas de persistencia. Se miden, no generan escenario crítico propio porque el atributo pagado está en 2 o 1.</p>
+
+        <h2>4. Escenarios de calidad</h2>
+        <p>Se escriben <b>tres escenarios</b>, uno por cada par de tensión real entre atributos altos. El par Usabilidad vs Seguridad queda cubierto dentro del escenario 2 (mensajes de estado y error filtrados por perfil y caso) y del escenario 3 (contenido devuelto filtrado). Los atributos en 2 y 1 no generan escenario crítico: se validan como restricciones operativas en la sección de pruebas. Los tres escenarios son críticos y cada uno lleva un ADR.</p>
+
+        <h3>Escenario 1. Acusación con rechazo explicado</h3>
+        <p class="note">Dominante: Adecuación funcional (4). Paga: Seguridad (4). Crítico. Es el escenario central de la etapa: la función principal (acusar) debe funcionar y explicar por qué rechaza sin revelar la solución.</p>
+        <table>
+            <tbody>
+                <tr><td>Atributo de calidad</td><td>Adecuación funcional, en tensión con la seguridad</td></tr>
+                <tr><td>Fuente del estímulo</td><td>Un jugador autenticado que envía una acusación al final de un caso</td></tr>
+                <tr><td>Estímulo</td><td>Llega una acusación que cumple las condiciones del caso, o que no las cumple (faltan pistas obligatorias, sospechoso incorrecto, acciones incompletas)</td></tr>
+                <tr><td>Artefacto</td><td>El servicio de acusación y puntuación</td></tr>
+                <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                <tr><td>Respuesta</td><td>Distingue tres casos: (a) acusación válida → confirma el cierre, calcula la puntuación en el servidor y muestra el resultado con el desglose (aciertos, pistas usadas, tiempo); (b) acusación inválida por condición faltante → rechaza y <b>explica al jugador qué condición falta</b>, sin revelar la solución; (c) acusación inválida por sesión o por cierre duplicado → rechaza sin revelar reglas y ofrece reintentar. En (a) y (b) el mensaje es comprensible para el jugador sin conocer las reglas internas.</td></tr>
+                <tr><td>Medida de la respuesta</td><td>En 30 acusaciones de prueba (10 válidas, 10 con condición faltante, 10 inválidas por sesión/duplicado): (1) <b>100 %</b> de las válidas se confirman con puntuación calculada en servidor y desglose visible; (2) <b>100 %</b> de las inválidas por condición faltante muestran un mensaje que nombra la condición faltante sin revelar la solución (verificado por revisión de 3 evaluadores independientes); (3) <b>0</b> de las inválidas por sesión/duplicado revelan reglas del caso; (4) en 100 acusaciones con 25 concurrentes, <b>p95 &lt; 2 s extremo a extremo</b> (umbral de restricción operativa porque Desempeño está en 2).</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Escenario 2. Flujo de investigación sin fricción</h3>
+        <p class="note">Dominante: Usabilidad (4). Paga: Adecuación funcional (4). Crítico. Es el escenario que el docente pidió priorizar: el jugador debe completar el flujo sin perderse. Cubre también el par Usabilidad vs Seguridad mediante mensajes de estado y error filtrados por perfil y caso.</p>
+        <table>
+            <tbody>
+                <tr><td>Atributo de calidad</td><td>Usabilidad, en tensión con la adecuación funcional</td></tr>
+                <tr><td>Fuente del estímulo</td><td>Un jugador nuevo, sin conocimiento previo del caso</td></tr>
+                <tr><td>Estímulo</td><td>El jugador debe explorar una escena, interrogar a un personaje con preguntas predefinidas, visitar un lugar y llegar a la acusación, sin ayuda externa</td></tr>
+                <tr><td>Artefacto</td><td>La interfaz web del caso y el servicio de progreso</td></tr>
+                <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                <tr><td>Respuesta</td><td>La interfaz muestra en todo momento: (a) qué acciones están disponibles; (b) qué se completó y qué falta para poder acusar; (c) el estado de la sesión (conectado, guardando, error). Los mensajes de estado y error se filtran por perfil y caso: nunca muestran información de otros perfiles ni reglas internas que no correspondan al caso abierto. Distingue tres casos: (a) acción exitosa → avanza el estado visible; (b) acción inválida → mensaje claro y el jugador puede corregir sin perder progreso; (c) pérdida de conexión → mensaje explícito y opción de reintentar sin duplicar. El jugador puede completar el caso sin consultar documentación externa.</td></tr>
+                <tr><td>Medida de la respuesta</td><td>En una prueba con <b>10 jugadores nuevos</b> (no del equipo), cada uno completa un caso de principio a fin sin ayuda externa: (1) <b>al menos 8 de 10</b> completan el caso sin pedir ayuda; (2) <b>al menos 8 de 10</b> identifican correctamente qué les falta antes de acusar; (3) <b>0</b> jugadores pierden progreso confirmado por un error de la interfaz; (4) <b>0</b> mensajes de estado o error muestran información de otros perfiles o reglas de casos no abiertos (verificado por revisión de 3 evaluadores); (5) el tiempo medio para completar el caso no supera en más del 50 % el tiempo de referencia del equipo.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Escenario 3. Reglas del caso visibles sin revelar la solución</h3>
+        <p class="note">Dominante: Adecuación funcional (4). Paga: Seguridad (4). Crítico. Complementa al esc. 1: allí se mide la acusación; aquí se mide que las reglas del caso estén disponibles para el jugador sin filtrar la solución.</p>
+        <table>
+            <tbody>
+                <tr><td>Atributo de calidad</td><td>Adecuación funcional, en tensión con la seguridad</td></tr>
+                <tr><td>Fuente del estímulo</td><td>Un jugador autenticado que consulta las reglas y el estado de su caso</td></tr>
+                <tr><td>Estímulo</td><td>El jugador pide ver qué condiciones debe cumplir para acusar y qué lleva completado; también intenta consultar las reglas de un caso que no tiene abierto</td></tr>
+                <tr><td>Artefacto</td><td>El servicio de reglas del caso y el servicio de progreso</td></tr>
+                <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                <tr><td>Respuesta</td><td>Devuelve al jugador las condiciones del caso en lenguaje comprensible (pistas obligatorias, acciones mínimas, sospechosos disponibles) y su estado de cumplimiento. Distingue tres casos: (a) consulta de su propio caso → muestra condiciones y estado; (b) consulta de un caso no abierto → rechaza sin revelar reglas; (c) consulta sin sesión → rechaza sin revelar reglas. Nunca devuelve el culpable ni la combinación exacta de respuestas correctas.</td></tr>
+                <tr><td>Medida de la respuesta</td><td>En 30 consultas de prueba: (1) <b>100 %</b> de las consultas al propio caso devuelven condiciones y estado completos (verificado contra la definición del caso); (2) <b>0</b> consultas a casos no abiertos o sin sesión devuelven reglas; (3) en 10 revisiones del contenido devuelto, <b>0</b> respuestas contienen el culpable o la combinación exacta de respuestas correctas (verificado por 3 evaluadores independientes); (4) en 100 consultas con 25 concurrentes, <b>p95 &lt; 2 s</b>.</td></tr>
+            </tbody>
+        </table>
+
+        <h2>5. ADR</h2>
+        <p>El Context de cada ADR es el escenario, copiado sin resumirlo. El estado es Propuesto y lo pendiente se declara en cada ADR. La columna "¿Cumple la medida?" usa tres valores explícitos: <b>Cumple</b>, <b>No cumple</b>, <b>Cumple parcialmente (falta: X)</b>. Cada opción nombra el atributo sacrificado con el nombre exacto de la tabla de priorización.</p>
+
+        <article class="adr">
+            <h3><span class="tag">Propuesto</span> ADR-01. Rechazar la acusación explicando la condición faltante</h3>
+            <p><b>Context.</b> Escenario 1, copiado íntegro.</p>
+            <table>
+                <tbody>
+                    <tr><td>Atributo de calidad</td><td>Adecuación funcional, en tensión con la seguridad</td></tr>
+                    <tr><td>Fuente del estímulo</td><td>Un jugador autenticado que envía una acusación al final de un caso</td></tr>
+                    <tr><td>Estímulo</td><td>Llega una acusación que cumple las condiciones del caso, o que no las cumple (faltan pistas obligatorias, sospechoso incorrecto, acciones incompletas)</td></tr>
+                    <tr><td>Artefacto</td><td>El servicio de acusación y puntuación</td></tr>
+                    <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                    <tr><td>Respuesta</td><td>Distingue tres casos: (a) acusación válida → confirma el cierre, calcula la puntuación en el servidor y muestra el resultado con el desglose; (b) acusación inválida por condición faltante → rechaza y explica al jugador qué condición falta, sin revelar la solución; (c) acusación inválida por sesión o por cierre duplicado → rechaza sin revelar reglas y ofrece reintentar.</td></tr>
+                    <tr><td>Medida de la respuesta</td><td>En 30 acusaciones de prueba (10 válidas, 10 con condición faltante, 10 inválidas por sesión/duplicado): 100 % de las válidas se confirman con puntuación en servidor y desglose visible; 100 % de las inválidas por condición faltante muestran un mensaje que nombra la condición faltante sin revelar la solución; 0 de las inválidas por sesión/duplicado revelan reglas; en 100 acusaciones con 25 concurrentes, p95 &lt; 2 s extremo a extremo.</td></tr>
+                </tbody>
+            </table>
+            <h3>Opciones consideradas</h3>
+            <table>
+                <thead><tr><th>Opción</th><th>Mecanismo</th><th>Gana</th><th>Paga</th><th>Atributo sacrificado</th><th>¿Cumple la medida?</th></tr></thead>
+                <tbody>
+                    <tr><td>A</td><td>Rechazar la acusación con un mensaje genérico ("no se puede acusar todavía") sin decir qué falta</td><td>Seguridad: no revela ninguna regla del caso</td><td>Adecuación funcional: el jugador no sabe qué corregir; la función de acusar queda incompleta desde la experiencia</td><td>Adecuación funcional (4)</td><td><b>No cumple</b>: la medida exige que el 100 % de las inválidas por condición faltante nombren la condición.</td></tr>
+                    <tr><td>B</td><td>Rechazar explicando la condición faltante en lenguaje del jugador (p. ej. "te falta interrogar al testigo"), calculada en el servidor a partir de las reglas del caso y el progreso confirmado; nunca revela el culpable ni la combinación de respuestas correctas</td><td>Adecuación funcional: la función de acusar guía al jugador y cierra el ciclo; Usabilidad: el jugador sabe qué hacer</td><td>Seguridad: se revela parte de la estructura del caso (qué condiciones existen), no la solución</td><td>Seguridad (4)</td><td><b>Cumple parcialmente (falta: revisión de 3 evaluadores para confirmar que ningún mensaje revela la solución y prueba de carga con 100 acusaciones para p95 &lt; 2 s)</b>; el resto se cumple por diseño.</td></tr>
+                    <tr><td>C</td><td>Rechazar explicando la condición faltante <b>y</b> mostrando el sospechoso correcto o la combinación exacta de respuestas</td><td>Adecuación funcional: el jugador nunca se traba</td><td>Seguridad: se revela la solución; el juego pierde sentido</td><td>Seguridad (4) y Adecuación funcional (4) por destruir la función de investigar</td><td><b>No cumple</b>: la medida prohíbe revelar la solución.</td></tr>
+                </tbody>
+            </table>
+            <div class="pend"><b>Pendiente.</b> La Decision queda abierta hasta el Bloque 3. La opción B es la única que cumple la función sin revelar la solución; falta la revisión de evaluadores y la prueba de carga.</div>
+        </article>
+
+        <article class="adr">
+            <h3><span class="tag">Propuesto</span> ADR-02. Guiar el flujo de investigación con estado visible</h3>
+            <p><b>Context.</b> Escenario 2, copiado íntegro.</p>
+            <table>
+                <tbody>
+                    <tr><td>Atributo de calidad</td><td>Usabilidad, en tensión con la adecuación funcional</td></tr>
+                    <tr><td>Fuente del estímulo</td><td>Un jugador nuevo, sin conocimiento previo del caso</td></tr>
+                    <tr><td>Estímulo</td><td>El jugador debe explorar una escena, interrogar a un personaje con preguntas predefinidas, visitar un lugar y llegar a la acusación, sin ayuda externa</td></tr>
+                    <tr><td>Artefacto</td><td>La interfaz web del caso y el servicio de progreso</td></tr>
+                    <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                    <tr><td>Respuesta</td><td>La interfaz muestra en todo momento qué acciones están disponibles, qué se completó y qué falta para poder acusar, y el estado de la sesión. Los mensajes de estado y error se filtran por perfil y caso. Distingue tres casos: (a) acción exitosa → avanza el estado visible; (b) acción inválida → mensaje claro y el jugador puede corregir sin perder progreso; (c) pérdida de conexión → mensaje explícito y opción de reintentar sin duplicar. El jugador puede completar el caso sin documentación externa.</td></tr>
+                    <tr><td>Medida de la respuesta</td><td>En una prueba con 10 jugadores nuevos (no del equipo): al menos 8 de 10 completan el caso sin pedir ayuda; al menos 8 de 10 identifican correctamente qué les falta antes de acusar; 0 jugadores pierden progreso confirmado por un error de la interfaz; 0 mensajes de estado o error muestran información de otros perfiles o reglas de casos no abiertos; el tiempo medio no supera en más del 50 % el tiempo de referencia del equipo.</td></tr>
+                </tbody>
+            </table>
+            <h3>Opciones consideradas</h3>
+            <table>
+                <thead><tr><th>Opción</th><th>Mecanismo</th><th>Gana</th><th>Paga</th><th>Atributo sacrificado</th><th>¿Cumple la medida?</th></tr></thead>
+                <tbody>
+                    <tr><td>A</td><td>Mostrar solo las acciones disponibles, sin indicar qué falta para acusar; el jugador deduce el estado</td><td>Adecuación funcional: menos elementos de interfaz que mantener; el jugador explora libremente</td><td>Usabilidad: el jugador nuevo se pierde y no sabe qué falta</td><td>Usabilidad (4)</td><td><b>No cumple</b>: la medida exige que al menos 8 de 10 identifiquen qué les falta.</td></tr>
+                    <tr><td>B</td><td>Mostrar un panel de estado con acciones disponibles, completadas y pendientes para acusar, y un mensaje explícito en cada caso (éxito, inválida, sin conexión), filtrado por perfil y caso; el estado se deriva del progreso confirmado en el servidor</td><td>Usabilidad: el jugador entiende qué hacer; Adecuación funcional: el flujo completo queda visible y corregible; Seguridad: los mensajes no filtran información de otros perfiles ni reglas de casos no abiertos</td><td>Adecuación funcional: más elementos de interfaz que diseñar y mantener; el equipo debe definir el estado visible para cada caso</td><td>Adecuación funcional (4)</td><td><b>Cumple parcialmente (falta: prueba con 10 jugadores nuevos para confirmar 8/10, medición de tiempo y revisión de evaluadores sobre el filtrado de mensajes)</b>; el resto se cumple por diseño.</td></tr>
+                    <tr><td>C</td><td>Mostrar un tutorial paso a paso que fuerza al jugador a seguir un orden fijo, con validaciones en cada paso</td><td>Usabilidad para el jugador nuevo: no se pierde</td><td>Adecuación funcional: reduce la libertad de investigación y oculta reglas que no estén en el tutorial; el jugador experimentado se siente ralentizado</td><td>Adecuación funcional (4) y Usabilidad (4) para el jugador experimentado</td><td><b>No cumple</b>: la medida exige que el jugador complete el caso, no que siga un orden impuesto; además reduce la cobertura funcional visible.</td></tr>
+                </tbody>
+            </table>
+            <div class="pend"><b>Pendiente.</b> La Decision queda abierta hasta el Bloque 3. La opción B es la única que cumple la guía sin imponer orden; falta la prueba con jugadores nuevos y la revisión del filtrado de mensajes.</div>
+        </article>
+
+        <article class="adr">
+            <h3><span class="tag">Propuesto</span> ADR-03. Exponer las reglas del caso sin revelar la solución</h3>
+            <p><b>Context.</b> Escenario 3, copiado íntegro.</p>
+            <table>
+                <tbody>
+                    <tr><td>Atributo de calidad</td><td>Adecuación funcional, en tensión con la seguridad</td></tr>
+                    <tr><td>Fuente del estímulo</td><td>Un jugador autenticado que consulta las reglas y el estado de su caso</td></tr>
+                    <tr><td>Estímulo</td><td>El jugador pide ver qué condiciones debe cumplir para acusar y qué lleva completado; también intenta consultar las reglas de un caso que no tiene abierto</td></tr>
+                    <tr><td>Artefacto</td><td>El servicio de reglas del caso y el servicio de progreso</td></tr>
+                    <tr><td>Entorno</td><td>Sesión de 90 minutos, 25 jugadores a la vez, una base central, juego solo con conexión</td></tr>
+                    <tr><td>Respuesta</td><td>Devuelve al jugador las condiciones del caso en lenguaje comprensible y su estado de cumplimiento. Distingue tres casos: (a) consulta de su propio caso → muestra condiciones y estado; (b) consulta de un caso no abierto → rechaza sin revelar reglas; (c) consulta sin sesión → rechaza sin revelar reglas. Nunca devuelve el culpable ni la combinación exacta de respuestas correctas.</td></tr>
+                    <tr><td>Medida de la respuesta</td><td>En 30 consultas de prueba: 100 % de las consultas al propio caso devuelven condiciones y estado completos; 0 consultas a casos no abiertos o sin sesión devuelven reglas; en 10 revisiones del contenido, 0 respuestas contienen el culpable o la combinación exacta de respuestas correctas; en 100 consultas con 25 concurrentes, p95 &lt; 2 s.</td></tr>
+                </tbody>
+            </table>
+            <h3>Opciones consideradas</h3>
+            <table>
+                <thead><tr><th>Opción</th><th>Mecanismo</th><th>Gana</th><th>Paga</th><th>Atributo sacrificado</th><th>¿Cumple la medida?</th></tr></thead>
+                <tbody>
+                    <tr><td>A</td><td>No exponer reglas al jugador: solo mostrar el progreso (acciones hechas) sin decir qué condiciones faltan</td><td>Seguridad: no se revela ninguna regla</td><td>Adecuación funcional: el jugador no puede planificar; la función de investigar queda incompleta</td><td>Adecuación funcional (4)</td><td><b>No cumple</b>: la medida exige que el 100 % de las consultas al propio caso devuelvan condiciones y estado.</td></tr>
+                    <tr><td>B</td><td>Exponer un catálogo de condiciones del caso en lenguaje del jugador (pistas obligatorias, acciones mínimas, sospechosos disponibles) y el estado de cumplimiento, derivado del progreso confirmado; filtrar por perfil y caso abierto; nunca incluir el culpable ni la combinación de respuestas</td><td>Adecuación funcional: el jugador entiende las reglas y puede planificar; Usabilidad: el jugador no adivina</td><td>Seguridad: se revela la estructura del caso (qué condiciones existen), no la solución</td><td>Seguridad (4)</td><td><b>Cumple parcialmente (falta: revisión de 3 evaluadores para confirmar que ningún contenido revela la solución y prueba de carga con 100 consultas para p95 &lt; 2 s)</b>; el resto se cumple por diseño.</td></tr>
+                    <tr><td>C</td><td>Exponer todas las reglas del caso, incluyendo el culpable y la combinación exacta de respuestas, para que el jugador no falle</td><td>Adecuación funcional: el jugador nunca se equivoca</td><td>Seguridad: se revela la solución; el juego pierde sentido</td><td>Seguridad (4) y Adecuación funcional (4) por destruir la función de investigar</td><td><b>No cumple</b>: la medida prohíbe revelar la solución.</td></tr>
+                </tbody>
+            </table>
+            <div class="pend"><b>Pendiente.</b> La Decision queda abierta hasta el Bloque 3. La opción B es la única que expone reglas sin revelar la solución; falta la revisión de evaluadores y la prueba de carga.</div>
+        </article>
+
+        <h2>6. Pruebas para comprobar los escenarios</h2>
+        <p>Las medidas son <b>objetivos de validación</b> y no resultados ejecutados. Se proponen pruebas que deberán correrse al implementar el sistema. La tabla de trazabilidad conecta cada escenario con su medida, su ADR y su prueba. Las restricciones operativas (Desempeño 2, Fiabilidad 1) se validan en las pruebas de carga y de persistencia, sin generar escenario crítico propio.</p>
+        <table>
+            <thead><tr><th>Prueba</th><th>Qué se simula</th><th>Qué debería observarse</th></tr></thead>
+            <tbody>
+                <tr><td>Acusación válida</td><td>10 acusaciones que cumplen las condiciones del caso</td><td>100 % confirmadas con puntuación en servidor y desglose visible</td></tr>
+                <tr><td>Acusación con condición faltante</td><td>10 acusaciones a las que les falta una pista obligatoria o una acción</td><td>100 % rechazadas con mensaje que nombra la condición faltante, sin revelar la solución</td></tr>
+                <tr><td>Acusación inválida por sesión o duplicado</td><td>10 acusaciones sin sesión o repetidas</td><td>0 revelan reglas; se ofrece reintentar</td></tr>
+                <tr><td>Flujo con jugadores nuevos</td><td>10 jugadores nuevos completan un caso sin ayuda externa</td><td>Al menos 8 de 10 completan; al menos 8 de 10 identifican qué les falta; 0 pierden progreso confirmado; 0 mensajes filtran información de otros perfiles; tiempo medio ≤ 1,5× referencia</td></tr>
+                <tr><td>Consulta de reglas del propio caso</td><td>30 consultas: 10 al propio caso, 10 a casos no abiertos, 10 sin sesión</td><td>100 % del propio caso devuelve condiciones y estado; 0 de los otros devuelven reglas</td></tr>
+                <tr><td>Revisión de contenido</td><td>10 revisiones del contenido devuelto al jugador por 3 evaluadores</td><td>0 respuestas contienen el culpable o la combinación exacta de respuestas; 0 mensajes filtran información de otros perfiles</td></tr>
+                <tr><td>Restricción operativa: carga</td><td>25 jugadores operando durante la sesión; 100 operaciones por tipo (acusación, consulta, acción)</td><td>p95 &lt; 2 s extremo a extremo en cada tipo, con log de tiempos</td></tr>
+                <tr><td>Restricción operativa: persistencia</td><td>20 recargas tras escritura confirmada y 20 tras escritura no confirmada</td><td>0 discrepancias entre lo mostrado y lo persistido; 0 decisiones no confirmadas mostradas como confirmadas</td></tr>
+            </tbody>
+        </table>
+

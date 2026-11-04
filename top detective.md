@@ -1,11 +1,11 @@
 ---
-equipo: [FALTA]
-integrantes: [FALTA]
+equipo: Equipo 4
+integrantes: Juan Andres Ramirez Castañeda - Daniela Cardona Madrid.
 nivel: pregrado
 caso: proyecto propio
 nombre_del_sistema: Detective Top
-formato_de_entrega: otro (HTML autocontenido)
-enlace_o_archivo_de_la_entrega: DetectiveTop_Bloque2_Mejorado.html
+formato_de_entrega: HTML
+enlace_o_archivo_de_la_entrega: DetectiveTop_Bloque2.html
 ---
 
 # Entrega Bloque 2: escenarios de calidad y ADR (texto plano)
@@ -243,4 +243,4 @@ Si la tensión Usabilidad vs Seguridad merece un escenario propio o queda cubier
 - La medida "p95 < 2 s" aparece en los tres escenarios como restricción operativa, no como medida del atributo dominante. La plantilla pide "medida de la respuesta" del escenario; queda registrado que el umbral pertenece a Desempeño (2), no al atributo dominante.
 - El campo "equipo" e "integrantes" del frontmatter quedaron en `[FALTA]`.
 - El campo "formato_de_entrega" se marcó como "otro (HTML autocontenido)" porque la entrega es un archivo HTML, no un widget ni diapositivas. Si el docente espera "widget", corregir.
-- El campo "enlace_o_archivo_de_la_entrega" apunta al nombre del archivo `DetectiveTop_Bloque2_Mejorado.html`; falta la ruta o el enlace definitivo.
+- El campo "enlace_o_archivo_de_la_entrega" apunta al nombre del archivo `DetectiveTop_Bloque2.html`; falta la ruta o el enlace definitivo.
